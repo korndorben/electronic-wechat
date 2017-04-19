@@ -12,6 +12,22 @@ const SplashWindow = require('./windows/controllers/splash');
 const WeChatWindow = require('./windows/controllers/wechat');
 const SettingsWindow = require('./windows/controllers/settings')
 const AppTray = require('./windows/controllers/app_tray');
+const socketclient = require('socket.io-client');
+const socket = socketclient.connect('http://10.8.8.13:8002/hubot',{
+    transports:['websocket']
+})
+socket.on('connect', function(){
+    console.log('connected');
+    socket.emit('cced','connected')
+});
+socket.on('event', function(data){
+    console.log('event');
+    socket.emit('cced',data)
+});
+socket.on('disconnect', function(){
+    console.log('disconnect');
+    socket.emit('cced','disconnect')
+});
 
 class ElectronicWeChat {
   constructor() {

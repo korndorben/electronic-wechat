@@ -95,7 +95,7 @@ class WeChatWindow {
     const int = setInterval(() => {
       if (this.loginState.current === this.loginState.NULL) {
         this.loadURL(Common.WEB_WECHAT);
-        console.log('Reconnect.');
+        // console.log('Reconnect.');
       }
     }, 5000);
     this.inervals[int] = true;

@@ -12,9 +12,9 @@ const AppConfig = require('../configuration');
 
 class Injector {
   init() {
-    if (Common.DEBUG_MODE) {
-      Injector.lock(window, 'console', window.console);
-    }
+    // if (1 || Common.DEBUG_MODE) {
+    //   Injector.lock(window, 'console', window.console);
+    // }
     this.initInjectBundle();
     this.initAngularInjection();
     this.lastUser = null;
@@ -36,6 +36,10 @@ class Injector {
         angular.injector(['ng', 'Services']).invoke(['confFactory', (confFactory) => (constants = confFactory)]);
         angular.module(moduleName).config(['$httpProvider', ($httpProvider) => {
           $httpProvider.defaults.transformResponse.push((value) => {
+              ipcRenderer.send('log','value.begin.........................................');
+              ipcRenderer.send('log',value);
+              ipcRenderer.send('constants',constants);
+              ipcRenderer.send('log','value.end...........................................');
             return self.transformResponse(value, constants);
           });
         },
@@ -48,7 +52,7 @@ class Injector {
           $rootScope.shareMenu = ShareMenu.inject;
           $rootScope.mentionMenu = MentionMenu.inject;
           $rootScope.log=function (data) {
-              ipcRenderer.send('log',data.witch)
+            //   ipcRenderer.send('log',data.AddMsgList)
           }
         }]);
         return angularBootstrapReal.apply(angular, arguments);
@@ -89,8 +93,8 @@ class Injector {
   }
 
   static lock(object, key, value) {
-    ipcRenderer.send('log', key);
-    ipcRenderer.send('log', value);
+    // ipcRenderer.send('log', key);
+    // ipcRenderer.send('log', value);
     return Object.defineProperty(object, key, {
       get: () => value,
       set: () => {},

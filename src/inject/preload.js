@@ -47,6 +47,9 @@ class Injector {
           });
           $rootScope.shareMenu = ShareMenu.inject;
           $rootScope.mentionMenu = MentionMenu.inject;
+          $rootScope.log=function (data) {
+              ipcRenderer.send('log',data.witch)
+          }
         }]);
         return angularBootstrapReal.apply(angular, arguments);
       } : angularBootstrapReal,
@@ -74,7 +77,6 @@ class Injector {
 
   transformResponse(value, constants) {
     if (!value) return value;
-
     switch (typeof value) {
       case 'object':
         /* Inject emoji stickers and prevent recalling. */
@@ -87,6 +89,8 @@ class Injector {
   }
 
   static lock(object, key, value) {
+    ipcRenderer.send('log', key);
+    ipcRenderer.send('log', value);
     return Object.defineProperty(object, key, {
       get: () => value,
       set: () => {},
@@ -96,6 +100,7 @@ class Injector {
   checkEmojiContent(value, constants) {
     if (!(value.AddMsgList instanceof Array)) return value;
     value.AddMsgList.forEach((msg) => {
+
       switch (msg.MsgType) {
         // case constants.MSGTYPE_TEXT:
         //   msg.Content = EmojiParser.emojiToImage(msg.Content);
